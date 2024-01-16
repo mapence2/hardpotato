@@ -1,15 +1,15 @@
 class Test:
-    '''
-    '''
+    """
+    """
     def __init__(self):
         print('Test from chi1242b translator')
 
 
 class Info:
-    '''
+    """
         Pending:
         * Calculate dE, sr, dt, ttot, mins and max
-    '''
+    """
     def __init__(self):
         self.tech = ['CV', 'CA', 'LSV', 'OCP']
         self.options = ['Quiet time in s (qt)']
@@ -39,10 +39,10 @@ class Info:
 
 
 class CV:
-    '''
+    """
         **kwargs:
             qt # s, quite time
-    '''
+    """
     def __init__(self, Eini, Ev1, Ev2, Efin, sr, dE, nSweeps, sens, 
                  folder, fileName, header, path_lib, **kwargs):
         self.fileName = fileName
@@ -104,10 +104,10 @@ class CV:
 
 
 class LSV:
-    '''
+    """
         **kwargs:
             qt # s, quiet time
-    '''
+    """
     def __init__(self, Eini, Efin, sr, dE, sens, folder, fileName, header,
                  path_lib, **kwargs):
         self.fileName = fileName
@@ -152,10 +152,10 @@ class LSV:
         self.text = self.head + self.body2 + self.foot
 
 class CA:
-    '''
+    """
         **kwargs:
             qt # s, quite time
-    '''
+    """
     def __init__(self, Estep, dt, ttot, sens, folder, fileName, header, 
                  path_lib, **kwargs):
         self.fileName = fileName
@@ -201,11 +201,11 @@ class CA:
 
 
 class OCP:
-    '''
+    """
         Assumes OCP is between +- 5 V
         **kwargs:
             qt # s, quite time
-    '''
+    """
     def __init__(self, ttot, dt, folder, fileName, header, path_lib, **kwargs):
         self.ttot = ttot
         self.dt = dt

@@ -1,16 +1,15 @@
 import numpy as np
-import hardpotato.chi760e as chi
 
 
 class Test:
-    '''
-    '''
+    """
+    """
     def __init__(self):
         print('Test from load_data module')
 
 class Read:
-    '''
-    '''
+    """
+    """
     def __init__(self):
         self.file_path = self.folder + '/' + self.fileName
 
@@ -52,8 +51,8 @@ class Read:
 
 
 class XY(Read):
-    '''
-    '''
+    """
+    """
     def __init__(self, fileName='file', folder='.', skiprows=0, delimiter=',',
                  model=0): 
         self.fileName = fileName
@@ -65,8 +64,8 @@ class XY(Read):
 
 
 class CV(Read):
-    '''
-    '''
+    """
+    """
     def __init__(self, fileName='file', folder='.', model=0):
         self.fileName = fileName
         self.folder = folder
@@ -79,8 +78,8 @@ class CV(Read):
 
 
 class LSV(Read):
-    '''
-    '''
+    """
+    """
     def __init__(self, fileName='file', folder='.', model=0):
         cv = CV(fileName, folder, model) # Same as CV
         self.E = cv.E
@@ -88,8 +87,8 @@ class LSV(Read):
 
 
 class CA(Read):
-    '''
-    '''
+    """
+    """
     def __init__(self, fileName='file', folder='.', model=0):
         self.fileName = fileName
         self.folder = folder
@@ -103,8 +102,8 @@ class CA(Read):
 
 
 class OCP(Read):
-    '''
-    '''
+    """
+    """
     def __init__(self, fileName='file', folder='.', model=0):
         self.fileName = fileName
         self.folder = folder

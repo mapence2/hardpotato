@@ -1,14 +1,14 @@
 class Test:
-    '''
-    '''
+    """
+    """
     def __init__(self):
         print('Test from chi601e translator')
 
 class Info:
-    '''
+    """
         Pending:
         * Calculate dE, sr, dt, ttot, mins and max
-    '''
+    """
     def __init__(self):
         self.tech = ['CV', 'CA', 'LSV', 'OCP', 'NPV', 'EIS']
         self.options = [
@@ -42,11 +42,11 @@ class Info:
 
 
 class CV:
-    '''
+    """
         **kwargs:
             qt # s, quite time
             resistance # ohms, solution resistance
-    '''
+    """
     def __init__(self, Eini, Ev1, Ev2, Efin, sr, dE, nSweeps, sens, 
                  folder, fileName, header, path_lib, **kwargs):
         self.fileName = fileName
@@ -106,11 +106,11 @@ class CV:
 
 
 class LSV:
-    '''
+    """
         **kwargs:
             qt # s, quiet time
             resistance # ohms, solution resistance
-    '''
+    """
     def __init__(self, Eini, Efin, sr, dE, sens, folder, fileName, header,
                  path_lib, **kwargs):
         self.fileName = fileName
@@ -190,8 +190,8 @@ class NPV():
 
 
 class CA:
-    '''
-    '''
+    """
+    """
     def __init__(self, Estep, dt, ttot, sens, folder, fileName, header, 
                  path_lib, **kwargs):
         self.fileName = fileName
@@ -234,9 +234,9 @@ class CA:
 
 
 class OCP:
-    '''
+    """
         Assumes OCP is between +- 10 V
-    '''
+    """
     def __init__(self, ttot, dt, folder, fileName, header, path_lib, **kwargs):
         self.fileName = fileName
         self.folder = folder

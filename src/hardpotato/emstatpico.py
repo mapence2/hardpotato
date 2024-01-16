@@ -1,15 +1,15 @@
 class Test:
-    '''
-    '''
+    """
+    """
     def __init__(self):
         print('Test from Emstat Pico translator')
 
 
 class Info:
-    '''
+    """
         Pending:
         * Calculate dE, sr, dt, ttot, mins and max
-    '''
+    """
     def __init__(self):
         self.tech = ['CV', 'CA', 'LSV', 'OCP']
         self.options = [
@@ -52,16 +52,16 @@ def get_mode(val):
 
 
 class CV:
-    '''
+    """
         **kwargs:
             mode # 'low_speed', 'high_speed', 'max_range'
-    '''
+    """
     def __init__(self, Eini, Ev1, Ev2, Efin, sr, dE, nSweeps, sens,
                  folder, fileName, header, path_lib=None, **kwargs):
-        '''
+        """
             Potential based variables need to be changed to mV int(Eini*100).
             For some reason Pico does not accept not having prefix 
-        '''
+        """
         self.Eini = int(Eini*1000)
         self.Ev1 = int(Ev1*1000)
         self.Ev2 = int(Ev2*1000)
@@ -130,14 +130,14 @@ class CV:
 
 
 class CA:
-    '''
+    """
         **kwargs:
             mode @ 'low_speed', 'high_speed', 'max_range'
-    '''
+    """
     def __init__(self, Estep, dt, ttot, sens, folder, fileName, header,
                  path_lib=None, **kwargs):
-        '''
-        '''
+        """
+        """
         self.Estep = int(Estep*1000)
         self.dt = int(dt*1000)
         self.ttot = int(ttot*1000)
@@ -196,10 +196,10 @@ class CA:
 
 
 class LSV:
-    '''
+    """
         **kwargs:
             mode # 'low_speed', 'high_speed', 'max_range'
-    '''
+    """
     def __init__(self, Eini, Efin, sr, dE, sens, folder, fileName, header, 
                  path_lib=None, **kwargs):
         self.Eini = int(Eini*1000)
@@ -263,8 +263,8 @@ class LSV:
 
 
 class OCP:
-    '''
-    '''
+    """
+    """
     def __init__(self, ttot, dt, folder, fileName, header, path_lib=None, **kwargs):
         dt = int(dt*1000)
         ttot = int(ttot*1000)
