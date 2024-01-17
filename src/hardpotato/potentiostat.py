@@ -6,7 +6,7 @@ import softpotato as sp
 import hardpotato.load_data as load_data
 import hardpotato.save_data as save_data
 import hardpotato.chi760e as chi760e
-import hardpotato.chi650e as chi650e
+import hardpotato.chi620e as chi620e
 import hardpotato.chi1205b as chi1205b
 import hardpotato.chi601e as chi601e
 import hardpotato.chi1242b as chi1242b
@@ -17,7 +17,7 @@ import hardpotato.pico_mscript as mscript
 import hardpotato.pico_serial as serial
 
 # Potentiostat models available: 
-models_available = ['chi1205b', 'chi1242b', 'chi601e', 'chi650e', 'chi760e', 'emstatpico']
+models_available = ['chi1205b', 'chi1242b', 'chi601e', 'chi620e', 'chi760e', 'emstatpico']
 
 # Global variables
 folder_save = '.'
@@ -39,18 +39,8 @@ class Info:
 
     def __init__(self, model):
         self.model = model
-        if self.model == 'chi1205b':
-            self.info = chi1205b.Info()
-        elif self.model == 'chi1242b':
-            self.info = chi1242b.Info()
-        elif self.model == 'chi601e':
-            self.info = chi601e.Info()
-        elif self.model == 'chi760e':
-            self.info = chi760e.Info()
-        elif self.model == 'chi650e':
-            self.info = chi650e.Info()
-        elif self.model == 'emstatpico':
-            self.info = emstatpico.Info()
+        if self.model in models_available:
+            self.info = eval(f"{self.model}.Info()")
         else:
             print('Potentiostat model ' + model + ' not available in the library.')
             print('Available models:', models_available)
@@ -191,8 +181,8 @@ class CV(Technique):
                                    **kwargs)
             Technique.__init__(self, text=self.tech.text, fileName=fileName)
             self.technique = 'CV'
-        if model_pstat == 'chi650e':
-            self.tech = chi650e.CV(Eini, Ev1, Ev2, Efin, sr, dE, nSweeps, sens,
+        if model_pstat == 'chi620e':
+            self.tech = chi620e.CV(Eini, Ev1, Ev2, Efin, sr, dE, nSweeps, sens,
                                    folder_save, fileName, header, path_lib,
                                    **kwargs)
             Technique.__init__(self, text=self.tech.text, fileName=fileName)
@@ -237,8 +227,8 @@ class LSV(Technique):
                                     header, path_lib, **kwargs)
             Technique.__init__(self, text=self.tech.text, fileName=fileName)
             self.technique = 'LSV'
-        if model_pstat == 'chi650e':
-            self.tech = chi650e.LSV(Eini, Efin, sr, dE, sens, folder_save, fileName,
+        if model_pstat == 'chi620e':
+            self.tech = chi620e.LSV(Eini, Efin, sr, dE, sens, folder_save, fileName,
                                     header, path_lib, **kwargs)
             Technique.__init__(self, text=self.tech.text, fileName=fileName)
             self.technique = 'LSV'
@@ -278,8 +268,8 @@ class CA(Technique):
                                    header, path_lib, **kwargs)
             Technique.__init__(self, text=self.tech.text, fileName=fileName)
             self.technique = 'CA'
-        if model_pstat == 'chi650e':
-            self.tech = chi650e.CA(Estep, dt, ttot, sens, folder_save, fileName,
+        if model_pstat == 'chi620e':
+            self.tech = chi620e.CA(Estep, dt, ttot, sens, folder_save, fileName,
                                    header, path_lib, **kwargs)
             Technique.__init__(self, text=self.tech.text, fileName=fileName)
             self.technique = 'CA'
@@ -318,8 +308,8 @@ class OCP(Technique):
                                     path_lib, **kwargs)
             Technique.__init__(self, text=self.tech.text, fileName=fileName)
             self.technique = 'OCP'
-        if model_pstat == 'chi650e':
-            self.tech = chi650e.OCP(ttot, dt, folder_save, fileName, header,
+        if model_pstat == 'chi620e':
+            self.tech = chi620e.OCP(ttot, dt, folder_save, fileName, header,
                                     path_lib, **kwargs)
             Technique.__init__(self, text=self.tech.text, fileName=fileName)
             self.technique = 'OCP'
@@ -354,8 +344,8 @@ class NPV(Technique):
     def __init__(self, Eini=0.5, Efin=-0.5, dE=0.01, tsample=0.1, twidth=0.05,
                  tperiod=10, sens=1e-6,
                  fileName='NPV', header='NPV performed with CHI760', **kwargs):
-        if model_pstat == 'chi650e':
-            self.tech = chi650e.NPV(Eini, Efin, dE, tsample, twidth, tperiod, sens,
+        if model_pstat == 'chi620e':
+            self.tech = chi620e.NPV(Eini, Efin, dE, tsample, twidth, tperiod, sens,
                                     folder_save, fileName, header, path_lib, **kwargs)
             Technique.__init__(self, text=self.tech.text, fileName=fileName)
             self.technique = 'NPV'

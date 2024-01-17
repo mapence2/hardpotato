@@ -3,7 +3,7 @@ class Test:
     """
 
     def __init__(self):
-        print('Test from chi650e translator')
+        print('Test from chi620e translator')
 
 
 class Info:
@@ -39,7 +39,7 @@ class Info:
                             '. Received ' + str(val) + ' ' + units)
 
     def specifications(self):
-        print('Model: CH Instruments 650E (chi650e)')
+        print('Model: CH Instruments 620E (chi620e)')
         print('Techiques available:', self.tech)
         print('Options available:', self.options)
 
@@ -101,7 +101,7 @@ class CV:
         # Validate bipot:
         info = Info()
         info.limits(E, info.E_min, info.E_max, 'E2', 'V')
-        # info.limits(sens, info.senC:\Users\oliverrz\Desktop\CHI\chi650es_min, info.sens_max, 'sens', 'A/V')
+        # info.limits(sens, info.senC:\Users\oliverrz\Desktop\CHI\chi620es_min, info.sens_max, 'sens', 'A/V')
 
         self.body2 = self.body + \
                      '\ne2=' + str(E) + '\nsens2=' + str(sens) + '\ni2on' + \
