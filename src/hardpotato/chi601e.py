@@ -1,38 +1,41 @@
 class Test:
     """
     """
+
     def __init__(self):
         print('Test from chi601e translator')
+
 
 class Info:
     """
         Pending:
         * Calculate dE, sr, dt, ttot, mins and max
     """
+
     def __init__(self):
         self.tech = ['CV', 'CA', 'LSV', 'OCP', 'NPV', 'EIS']
         self.options = [
-                        'Quiet time in s (qt)', 
-                        'Resistance in ohms (resistance)'
-                        ]
+            'Quiet time in s (qt)',
+            'Resistance in ohms (resistance)'
+        ]
 
         self.E_min = -10
         self.E_max = 10
         self.sr_min = 0.000001
         self.sr_max = 10000
-        #self.dE_min = 
-        #self.sr_min = 
-        #self.dt_min = 
-        #self.dt_max = 
-        #self.ttot_min = 
-        #self.ttot_max = 
-        #self.freq_min = 0.00001
-        #self.freq_max = 1000000
+        # self.dE_min =
+        # self.sr_min =
+        # self.dt_min =
+        # self.dt_max =
+        # self.ttot_min =
+        # self.ttot_max =
+        # self.freq_min = 0.00001
+        # self.freq_max = 1000000
 
     def limits(self, val, low, high, label, units):
         if val < low or val > high:
-            raise Exception(label + ' should be between ' + str(low) + ' ' +\
-                            units  + ' and ' + str(high) + ' ' + units +\
+            raise Exception(label + ' should be between ' + str(low) + ' ' + \
+                            units + ' and ' + str(high) + ' ' + units + \
                             '. Received ' + str(val) + ' ' + units)
 
     def specifications(self):
@@ -47,11 +50,12 @@ class CV:
             qt # s, quite time
             resistance # ohms, solution resistance
     """
-    def __init__(self, Eini, Ev1, Ev2, Efin, sr, dE, nSweeps, sens, 
+
+    def __init__(self, Eini, Ev1, Ev2, Efin, sr, dE, nSweeps, sens,
                  folder, fileName, header, path_lib, **kwargs):
         self.fileName = fileName
         self.folder = folder
-        self.text = '' 
+        self.text = ''
 
         if 'qt' in kwargs:
             qt = kwargs.get('qt')
@@ -74,7 +78,7 @@ class CV:
             eh = Ev2
             el = Ev1
             pn = 'n'
-        nSweeps = nSweeps + 1 # final e from chi is enabled by default
+        nSweeps = nSweeps + 1  # final e from chi is enabled by default
 
         # building macro:
         self.head = 'c\x02\0\0\nfolder: ' + folder + '\nfileoverride\n' + \
@@ -83,16 +87,15 @@ class CV:
                     str(el) + '\npn=' + pn + '\ncl=' + str(nSweeps) + \
                     '\nefon\nef=' + str(Efin) + '\nsi=' + str(dE) + \
                     '\nqt=' + str(qt) + '\nv=' + str(sr) + '\nsens=' + str(sens)
-        if resistance: # In case IR compensation is required
+        if resistance:  # In case IR compensation is required
             self.body2 = self.body + '\nmir=' + str(resistance) + \
                          '\nircompon\nrun\nircompoff\nsave:' + self.fileName + \
                          '\ntsave:' + self.fileName
         else:
             self.body2 = self.body + '\nrun\nsave:' + self.fileName + \
-                         '\ntsave:' + self.fileName 
+                         '\ntsave:' + self.fileName
         self.foot = '\n forcequit: yesiamsure\n'
         self.text = self.head + self.body2 + self.foot
-
 
     def validate(self, Eini, Ev1, Ev2, Efin, sr, dE, nSweeps, sens):
         info = Info()
@@ -101,8 +104,8 @@ class CV:
         info.limits(Ev2, info.E_min, info.E_max, 'Ev2', 'V')
         info.limits(Efin, info.E_min, info.E_max, 'Efin', 'V')
         info.limits(sr, info.sr_min, info.sr_max, 'sr', 'V/s')
-        #info.limits(dE, info.dE_min, info.dE_max, 'dE', 'V')
-        #info.limits(sens, info.sens_min, info.sens_max, 'sens', 'A/V')
+        # info.limits(dE, info.dE_min, info.dE_max, 'dE', 'V')
+        # info.limits(sens, info.sens_min, info.sens_max, 'sens', 'A/V')
 
 
 class LSV:
@@ -111,6 +114,7 @@ class LSV:
             qt # s, quiet time
             resistance # ohms, solution resistance
     """
+
     def __init__(self, Eini, Efin, sr, dE, sens, folder, fileName, header,
                  path_lib, **kwargs):
         self.fileName = fileName
@@ -125,21 +129,21 @@ class LSV:
             resistance = kwargs.get('resistance')
         else:
             resistance = 0
-        
+
         self.validate(Eini, Efin, sr, dE, sens)
 
         self.head = 'C\x02\0\0\nfolder: ' + folder + '\nfileoverride\n' + \
                     'header: ' + header + '\n\n'
         self.body = 'tech=lsv\nei=' + str(Eini) + '\nef=' + str(Efin) + \
                     '\nv=' + str(sr) + '\nsi=' + str(dE) + \
-                    '\nqt=' + str(qt) + '\nsens=' + str(sens) 
-        if resistance: # In case IR compensation is required
+                    '\nqt=' + str(qt) + '\nsens=' + str(sens)
+        if resistance:  # In case IR compensation is required
             self.body2 = self.body + '\nmir=' + str(resistance) + \
                          '\nircompon\nrun\nircompoff\nsave:' + self.fileName + \
                          '\ntsave:' + self.fileName
         else:
             self.body2 = self.body + '\nrun\nsave:' + self.fileName + \
-                         '\ntsave:' + self.fileName 
+                         '\ntsave:' + self.fileName
         self.foot = '\n forcequit: yesiamsure\n'
         self.text = self.head + self.body2 + self.foot
 
@@ -148,9 +152,8 @@ class LSV:
         info.limits(Eini, info.E_min, info.E_max, 'Eini', 'V')
         info.limits(Efin, info.E_min, info.E_max, 'Efin', 'V')
         info.limits(sr, info.sr_min, info.sr_max, 'sr', 'V/s')
-        #info.limits(dE, info.dE_min, info.dE_max, 'dE', 'V')
-        #info.limits(sens, info.sens_min, info.sens_max, 'sens', 'A/V')
-
+        # info.limits(dE, info.dE_min, info.dE_max, 'dE', 'V')
+        # info.limits(sens, info.sens_min, info.sens_max, 'sens', 'A/V')
 
 
 class NPV():
@@ -176,7 +179,7 @@ class NPV():
                     '\nsw=' + str(twidth) + '\nprod=' + str(tperiod) + \
                     '\nqt=' + str(qt) + '\nsens=' + str(sens)
         self.body = self.body + \
-                    '\nrun\nsave:' + fileName + '\ntsave:' + fileName 
+                    '\nrun\nsave:' + fileName + '\ntsave:' + fileName
         self.foot = '\n forcequit: yesiamsure\n'
         self.text = self.head + self.body + self.foot
 
@@ -184,15 +187,16 @@ class NPV():
         info = Info()
         info.limits(Eini, info.E_min, info.E_max, 'Eini', 'V')
         info.limits(Efin, info.E_min, info.E_max, 'Efin', 'V')
-        #info.limits(tsample, info.tsample)
-        #info.limits(dE, info.dE_min, info.dE_max, 'dE', 'V')
-        #info.limits(sens, info.sens_min, info.sens_max, 'sens', 'A/V')
+        # info.limits(tsample, info.tsample)
+        # info.limits(dE, info.dE_min, info.dE_max, 'dE', 'V')
+        # info.limits(sens, info.sens_min, info.sens_max, 'sens', 'A/V')
 
 
 class CA:
     """
     """
-    def __init__(self, Estep, dt, ttot, sens, folder, fileName, header, 
+
+    def __init__(self, Estep, dt, ttot, sens, folder, fileName, header,
                  path_lib, **kwargs):
         self.fileName = fileName
         self.folder = folder
@@ -211,32 +215,32 @@ class CA:
                     'header: ' + header + '\n\n'
         self.body = 'tech=i-t\nei=' + str(Estep) + '\nst=' + str(ttot) + \
                     '\nsi=' + str(dt) + '\nqt=' + str(qt) + \
-                    '\nsens=' + str(sens) 
-        if resistance: # In case IR compensation is required
+                    '\nsens=' + str(sens)
+        if resistance:  # In case IR compensation is required
             self.body2 = self.body + '\nmir=' + str(resistance) + \
                          '\nircompon\nrun\nircompoff\nsave:' + self.fileName + \
                          '\ntsave:' + self.fileName
         else:
             self.body2 = self.body + '\nrun\nsave:' + self.fileName + \
-                         '\ntsave:' + self.fileName 
+                         '\ntsave:' + self.fileName
         self.foot = '\n forcequit: yesiamsure\n'
         self.text = self.head + self.body2 + self.foot
 
         self.validate(Estep, dt, ttot, sens)
 
-
     def validate(self, Estep, dt, ttot, sens):
         info = Info()
         info.limits(Estep, info.E_min, info.E_max, 'Estep', 'V')
-        #info.limits(dt, info.dt_min, info.dt_max, 'dt', 's')
-        #info.limits(ttot, info.ttot_min, info.ttot_max, 'ttot', 's')
-        #info.limits(sens, info.sens_min, info.sens_max, 'sens', 'A/V')
+        # info.limits(dt, info.dt_min, info.dt_max, 'dt', 's')
+        # info.limits(ttot, info.ttot_min, info.ttot_max, 'ttot', 's')
+        # info.limits(sens, info.sens_min, info.sens_max, 'sens', 'A/V')
 
 
 class OCP:
     """
         Assumes OCP is between +- 10 V
     """
+
     def __init__(self, ttot, dt, folder, fileName, header, path_lib, **kwargs):
         self.fileName = fileName
         self.folder = folder
@@ -249,13 +253,13 @@ class OCP:
         if 'resistance' in kwargs:
             resistance = kwargs.get('resistance')
         else:
-            resistance = 0 
+            resistance = 0
 
         self.head = 'C\x02\0\0\nfolder: ' + folder + '\nfileoverride\n' + \
                     'header: ' + header + '\n\n'
         self.body = 'tech=ocpt\nst=' + str(ttot) + '\neh=10' + \
-                    '\nel=-10' + '\nsi=' + str(dt) + '\nqt=' + str(qt) +\
-                    '\nrun\nsave:' + self.fileName + '\ntsave:' + self.fileName 
+                    '\nel=-10' + '\nsi=' + str(dt) + '\nqt=' + str(qt) + \
+                    '\nrun\nsave:' + self.fileName + '\ntsave:' + self.fileName
         self.foot = '\nforcequit: yesiamsure\n'
         self.text = self.head + self.body + self.foot
 
@@ -263,5 +267,5 @@ class OCP:
 
     def validate(self, ttot, dt):
         info = Info()
-        #info.limits(dt, info.dt_min, info.dt_max, 'dt', 's')
-        #info.limits(ttot, info.ttot_min, info.ttot_max, 'ttot', 's')
+        # info.limits(dt, info.dt_min, info.dt_max, 'dt', 's')
+        # info.limits(ttot, info.ttot_min, info.ttot_max, 'ttot', 's')
