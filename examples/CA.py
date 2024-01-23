@@ -22,7 +22,7 @@ ttot = 1        # s, total time
 sens = 1e-6     # A/V, current sensitivity
 E2 = 0.5        # V, potential of the second working electrode
 sens2 = 1e-9    # A/V, current sensitivity of the second working electrode
-fileName = 'CA' # base file name for data file
+fileName = 'CA'  # base file name for data file
 header = 'CA'   # header for data file
 
 # Initialize experiment:
