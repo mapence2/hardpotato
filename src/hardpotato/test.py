@@ -19,7 +19,7 @@ cv = potentiostat.LSV(Eini=1)
 #lsv.bipot()
 #lsv.run()
 
-#ca = potentiostat.CA()
+#ca = potentiostat.IT()
 #ca.bipot()
 #ca.run()
 

@@ -13,7 +13,7 @@ class Info:
     """
 
     def __init__(self):
-        self.tech = ['CV', 'CA', 'LSV', 'OCP']
+        self.tech = ['CV', 'IT', 'LSV', 'OCP']
         self.options = [
             'mode (low_speed, high_speed, max_range)',
         ]
@@ -128,7 +128,7 @@ class CV:
         # print(self.text)
 
 
-class CA:
+class IT:
     """
         **kwargs:
             mode @ 'low_speed', 'high_speed', 'max_range'

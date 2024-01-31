@@ -7,7 +7,7 @@ class ChiInfo:
     def __init__(self, model):
         if model == "chi601e":
             self.name = "CH Instruments 601E (chi601e)"
-            self.tech = ['CV', 'CA', 'LSV', 'OCP', 'NPV', 'EIS']
+            self.tech = ['CV', 'IT', 'CA', 'LSV', 'OCP', 'NPV', 'EIS']
             self.options = [
                 'Quiet time in s (qt)',
                 'Resistance in ohms (resistance)'
@@ -29,7 +29,29 @@ class ChiInfo:
             # self.freq_max = 1000000
         elif model == "chi620e":
             self.name = "CH Instruments 620E (chi620e)"
-            self.tech = ['CV', 'CA', 'LSV', 'OCP', 'NPV', 'EIS']
+            self.tech = ['CV', 'IT', 'CA', 'LSV', 'OCP', 'NPV']
+            self.options = [
+                'Quiet time in s (qt)',
+                'Resistance in ohms (resistance)'
+            ]
+            self.bipot = True
+            self.resistance_opt = True
+
+            self.E_min = -10
+            self.E_max = 10
+            self.sr_min = 0.000001
+            self.sr_max = 10000
+            # self.dE_min =
+            # self.sr_min =
+            # self.dt_min =
+            # self.dt_max =
+            # self.ttot_min =
+            # self.ttot_max =
+            self.freq_min = 0.00001
+            self.freq_max = 1000000
+        elif model == "chi650e":
+            self.name = "CH Instruments 620E (chi620e)"
+            self.tech = ['CV', 'IT', 'CA', 'LSV', 'OCP', 'NPV', 'EIS']
             self.options = [
                 'Quiet time in s (qt)',
                 'Resistance in ohms (resistance)'
@@ -51,7 +73,7 @@ class ChiInfo:
             self.freq_max = 1000000
         elif model == "chi760e":
             self.name = "CH Instruments 760E (chi760e)"
-            self.tech = self.tech = ['CV', 'CA', 'LSV', 'OCP', 'NPV', 'EIS']
+            self.tech = self.tech = ['CV', 'IT', 'CA', 'LSV', 'OCP', 'NPV', 'EIS']
             self.options = [
                         'Quiet time in s (qt)',
                         'Resistance in ohms (resistance)'
@@ -73,7 +95,7 @@ class ChiInfo:
             self.freq_max = 1000000
         elif model == "chi1205b":
             self.name = "CH Instruments 1205B (chi1205b)"
-            self.tech = ['CV', 'CA', 'LSV', 'OCP']
+            self.tech = ['CV', 'IT', 'CA', 'LSV', 'OCP']
             self.options = ['Quiet time in s (qt)']
             self.bipot = False
             self.resistance_opt = False
@@ -90,7 +112,7 @@ class ChiInfo:
             # self.ttot_max =
         elif model == "chi1242b":
             self.name = "H Instruments 1242B (chi1242b)"
-            self.tech = ['CV', 'CA', 'LSV', 'OCP']
+            self.tech = ['CV', 'IT', 'CA', 'LSV', 'OCP']
             self.options = ['Quiet time in s (qt)']
             self.bipot = True
             self.resistance_opt = False
@@ -135,14 +157,8 @@ class ChiCV:
         self.folder = folder
         self.text = ''
 
-        if 'qt' in kwargs:
-            qt = kwargs.get('qt')
-        else:
-            qt = 2
-        if 'resistance' in kwargs:
-            resistance = kwargs.get('resistance')
-        else:
-            resistance = 0
+        qt = kwargs.get('qt', 2)
+        resistance = kwargs.get('resistance', 0)
 
         self.validate(Eini, Ev1, Ev2, Efin, sr, dE, nSweeps, sens)
 
@@ -159,19 +175,15 @@ class ChiCV:
         nSweeps = nSweeps + 1  # final e from chi is enabled by default
 
         # building macro:
-        self.head = 'c\x02\0\0\nfolder: ' + folder + '\nfileoverride\n' + \
-                    'header: ' + header + '\n\n'
-        self.body = 'tech=cv\nei=' + str(Ei) + '\neh=' + str(eh) + '\nel=' + \
-                    str(el) + '\npn=' + pn + '\ncl=' + str(nSweeps) + \
-                    '\nefon\nef=' + str(Efin) + '\nsi=' + str(dE) + \
-                    '\nqt=' + str(qt) + '\nv=' + str(sr) + '\nsens=' + str(sens)
+        self.head = f'c\x02\0\0\nfolder: {folder}\nfileoverride\n' \
+                    f'header: {header}\n\n'
+        self.body = f'tech=cv\nei={Ei}\neh={eh}\nel={el}\npn={pn}\ncl={nSweeps}' \
+                    f'\nefon\nef={Efin}\nsi={dE}\nqt={qt}\nv={sr}\nsens={sens}'
         if resistance and self.info.resistance_opt:  # In case IR compensation is required
-            self.body2 = self.body + '\nmir=' + str(resistance) + \
-                         '\nircompon\nrun\nircompoff\nsave:' + self.fileName + \
-                         '\ntsave:' + self.fileName
+            self.body2 = self.body + f'\nmir={resistance}\nircompon\nrun\nircompoff\n' \
+                                     f'save:{self.fileName}\ntsave:{self.fileName}'
         else:
-            self.body2 = self.body + '\nrun\nsave:' + self.fileName + \
-                         '\ntsave:' + self.fileName
+            self.body2 = self.body + f'\nrun\nsave:{self.fileName}\ntsave:{self.fileName}'
         self.foot = '\n forcequit: yesiamsure\n'
         self.text = self.head + self.body2 + self.foot
 
@@ -198,14 +210,8 @@ class ChiLSV:
         self.folder = folder
         self.text = ''
 
-        if 'qt' in kwargs:
-            qt = kwargs.get('qt')
-        else:
-            qt = 2
-        if 'resistance' in kwargs:
-            resistance = kwargs.get('resistance')
-        else:
-            resistance = 0
+        qt = kwargs.get('qt', 2)
+        resistance = kwargs.get('resistance', 0)
 
         self.validate(Eini, Efin, sr, dE, sens)
 
@@ -245,17 +251,14 @@ class ChiLSV:
         # self.info.limits(sens, self.info.sens_min, self.info.sens_max, 'sens', 'A/V')
 
 
-class ChiNPV():
+class ChiNPV:
     def __init__(self, Eini, Efin, dE, tsample, twidth, tperiod, sens, folder, fileName, header, model="", **kwargs):
         self.info = ChiInfo(model)
         self.fileName = fileName
         self.folder = folder
         self.text = ''
 
-        if 'qt' in kwargs:
-            qt = kwargs.get('qt')
-        else:
-            qt = 2
+        qt = kwargs.get('qt', 2)
 
         print('NPV technique still in development. Use with caution.')
 
@@ -280,7 +283,7 @@ class ChiNPV():
         # self.info.limits(sens, self.info.sens_min, self.info.sens_max, 'sens', 'A/V')
 
 
-class ChiCA:
+class ChiIT:
     """
     """
 
@@ -290,14 +293,8 @@ class ChiCA:
         self.folder = folder
         self.text = ''
 
-        if 'qt' in kwargs:
-            qt = kwargs.get('qt')
-        else:
-            qt = 2
-        if 'resistance' in kwargs:
-            resistance = kwargs.get('resistance')
-        else:
-            resistance = 0
+        qt = kwargs.get('qt', 2)
+        resistance = kwargs.get('resistance', 0)
 
         self.head = 'C\x02\0\0\nfolder: ' + folder + '\nfileoverride\n' + \
                     'header: ' + header + '\n\n'
@@ -335,6 +332,51 @@ class ChiCA:
         self.text = self.head + self.body2 + self.foot
 
 
+class ChiCA:
+    """
+        **kwargs:
+            qt # s, quite time
+    """
+
+    def __init__(self, Eini, Ev1, Ev2,  dE, nSweeps, pw, sens,
+                 folder, fileName, header, model="", **kwargs):
+        self.info = ChiInfo(model)
+        self.fileName = fileName
+        self.folder = folder
+        self.text = ''
+
+        qt = kwargs.get('qt', 2)
+
+        self.validate(Eini, Ev1, Ev2)
+
+        # correcting parameters:
+        Ei = Eini
+        if Ev1 > Ev2:
+            eh = Ev1
+            el = Ev2
+            pn = 'p'
+        else:
+            eh = Ev2
+            el = Ev1
+            pn = 'n'
+
+        nSweeps = nSweeps + 1  # final e from chi is enabled by default
+
+        # building macro:
+        self.head = f'c\x02\0\0\nfolder: {folder}\nfileoverride\n' \
+                    f'header: {header}\n\n'
+        self.body = f'tech=ca\nei={Ei}\neh={eh}\nel={el}\npn={pn}\n' \
+                    f'cl={nSweeps}\npw={pw}\nsi={dE}\nqt={qt}\nsens={sens}' \
+                    f'\nrun\nsave:{self.fileName}\ntsave:{self.fileName}'
+        self.foot = '\n forcequit: yesiamsure\n'
+        self.text = self.head + self.body + self.foot
+
+    def validate(self, Eini, Ev1, Ev2):
+        self.info.limits(Eini, self.info.E_min, self.info.E_max, 'Eini', 'V')
+        self.info.limits(Ev1, self.info.E_min, self.info.E_max, 'Ev1', 'V')
+        self.info.limits(Ev2, self.info.E_min, self.info.E_max, 'Ev2', 'V')
+
+
 class ChiOCP:
     """
         Assumes OCP is between +- 10 V
@@ -346,14 +388,8 @@ class ChiOCP:
         self.folder = folder
         self.text = ''
 
-        if 'qt' in kwargs:
-            qt = kwargs.get('qt')
-        else:
-            qt = 2
-        if 'resistance' in kwargs:
-            resistance = kwargs.get('resistance')
-        else:
-            resistance = 0
+        qt = kwargs.get('qt', 2)
+        resistance = kwargs.get('resistance', 0)
 
         self.head = 'C\x02\0\0\nfolder: ' + folder + '\nfileoverride\n' + \
                     'header: ' + header + '\n\n'
@@ -382,18 +418,11 @@ class ChiEIS:
         self.info = ChiInfo(model)
         self.fileName = fileName
         self.folder = folder
-        self.text = ''
 
-        if 'qt' in kwargs:
-            qt = kwargs.get('qt')
-        else:
-            qt = 2
+        qt = kwargs.get('qt', 2)
 
-        self.head = 'C\x02\0\0\nfolder: ' + folder + '\nfileoverride\n' + \
-                    'header: ' + header + '\n\n'
-        self.body = 'tech=imp\nei=' + str(Eini) + '\nfl=' + str(low_freq) + \
-                    '\nfh=' + str(high_freq) + '\namp=' + str(amplitude) + \
-                    '\nsens=' + str(sens) + '\nqt=' + str(qt) + \
-                    '\nrun\nsave:' + self.fileName + '\ntsave:' + self.fileName
+        self.head = f'C\x02\0\0\nfolder: {folder}\nfileoverride\nheader: {header}\n\n'
+        self.body = f'tech=imp\nei={Eini}\nfl={low_freq}\nfh={high_freq}\namp={amplitude}\nsens={sens}\nqt={qt}' \
+                    f'\nrun\nsave:{self.fileName}\ntsave:{self.fileName}'
         self.foot = '\nforcequit: yesiamsure\n'
         self.text = self.head + self.body + self.foot
