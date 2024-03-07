@@ -22,16 +22,16 @@ ttot = 1        # s, total time
 sens = 1e-6     # A/V, current sensitivity
 E2 = 0.5        # V, potential of the second working electrode
 sens2 = 1e-9    # A/V, current sensitivity of the second working electrode
-fileName = 'CA' # base file name for data file
+fileName = 'CA'  # base file name for data file
 header = 'CA'   # header for data file
 
 # Initialize experiment:
-ca = hp.potentiostat.CA(Estep, dt, ttot, sens, fileName, header)
+ca = hp.potentiostat.IT(Estep, dt, ttot, sens, fileName, header)
 # Run experiment:
 ca.run()
 
 # Load recently acquired data
-data = hp.load_data.CA(fileName +'.txt', folder, model)
+data = hp.load_data.IT(fileName +'.txt', folder, model)
 i = data.i
 t = data.t
 

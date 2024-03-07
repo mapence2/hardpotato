@@ -45,7 +45,6 @@ EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 import logging
 import time
 
-
 LOG = logging.getLogger(__name__)
 
 
@@ -154,7 +153,7 @@ class Instrument():
         lines = []
         print('Reading')
         while True:
-            #print('Reading')
+            # print('Reading')
             try:
                 line = self.readline()
             except CommunicationTimeout:

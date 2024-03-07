@@ -27,7 +27,7 @@ For the CHI601E and CHI760E only:
 
 # Installation
 Open a console and type:
-```python
+```bash
 pip install hardpotato
 ```
 
