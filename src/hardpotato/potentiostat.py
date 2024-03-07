@@ -8,7 +8,7 @@ import hardpotato.load_data as load_data
 import hardpotato.save_data as save_data
 import hardpotato.emstatpico as emstatpico
 
-import hardpotato.pico_instrument as instrument
+import hardpotato.pico_instrument as pico_instrument
 import hardpotato.pico_mscript as mscript
 import hardpotato.pico_serial as serial
 
@@ -23,6 +23,7 @@ path_lib = '.'
 
 class Test:
     """
+    Class for testing
     """
 
     def __init__(self):
@@ -31,12 +32,15 @@ class Test:
 
 class Info:
     """
+    Class for storing information about potentiostat and technique in use
     """
 
     def __init__(self, model):
         self.model = model
-        if self.model in models_available:
-            self.info = eval(f"{self.model}.Info()")
+        if "chi" in model_pstat:
+            self.info = ChiInfo(model=model)
+        elif model_pstat == 'emstatpico':
+            self.info = emstatpico.Info()
         else:
             print('Potentiostat model ' + model + ' not available in the library.')
             print('Available models:', models_available)
@@ -46,6 +50,9 @@ class Info:
 
 
 class Setup:
+    """
+    Class for setting up potentiostat and filing system
+    """
     def __init__(self, model=0, path='.', folder='.', port=None, verbose=1):
         global folder_save
         folder_save = folder
@@ -68,6 +75,7 @@ class Setup:
 
 class Technique:
     """
+    Base class for operating chosen potentiostat technique
     """
 
     def __init__(self, text='', fileName='CV'):
@@ -75,6 +83,7 @@ class Technique:
         self.fileName = fileName
         self.technique = 'Technique'
         self.bpot = False
+        self.header = ""
 
     def writeToFile(self):
         if model_pstat[0:3] == 'chi':
@@ -103,7 +112,7 @@ class Technique:
             if port_ is None:
                 self.port = serial.auto_detect_port()
             with serial.Serial(self.port, 1) as comm:
-                dev = instrument.Instrument(comm)
+                dev = pico_instrument.Instrument(comm)
                 dev.send_script(folder_save + '/' + self.fileName + '.mscr')
                 result = dev.readlines_until_end()
             self.data = mscript.parse_result_lines(result)
@@ -147,47 +156,39 @@ class Technique:
 
     def bipot(self, E=-0.2, sens=1e-6):
         if self.technique != 'OCP' and self.technique != 'EIS':
-            if model_pstat == 'chi760e':
-                self.tech.bipot(E, sens)
-                self.text = self.tech.text
-                self.bpot = True
-            if model_pstat == 'chi1242b':
-                self.tech.bipot(E, sens)
-                self.text = self.tech.text
-                self.bpot = True
-            elif model_pstat == 'emstatpico':
-                self.tech.bipot(E, sens)
-                self.text = self.tech.text
-                self.bpot = True
+            self.tech.bipot(E, sens)
+            self.text = self.tech.text
+            self.bpot = True
         else:
             print(self.technique + ' does not have bipotentiostat mode')
 
 
 class CV(Technique):
     """
+    Class for running CV Technique
     """
 
     def __init__(self, Eini=-0.2, Ev1=0.2, Ev2=-0.2, Efin=-0.2, sr=0.1,
                  dE=0.001, nSweeps=2, sens=1e-6,
                  fileName='CV', header='CV', **kwargs):
         self.header = header
+        self.technique = 'CV'
         if "chi" in model_pstat:
             self.tech = ChiCV(Eini, Ev1, Ev2, Efin, sr, dE, nSweeps, sens,
                               folder_save, fileName, header=header, model=model_pstat, **kwargs)
             Technique.__init__(self, text=self.tech.text, fileName=fileName)
-            self.technique = 'CV'
         elif model_pstat == 'emstatpico':
             self.tech = emstatpico.CV(Eini, Ev1, Ev2, Efin, sr, dE, nSweeps, sens,
                                       folder_save, fileName, header=header, path_lib='',
                                       **kwargs)
             Technique.__init__(self, text=self.tech.text, fileName=fileName)
-            self.technique = 'CV'
         else:
             print('Potentiostat model ' + model_pstat + ' does not have CV.')
 
 
 class LSV(Technique):
     """
+    Class for running LSV Technique
     """
 
     def __init__(self, Eini=-0.2, Efin=0.2, sr=0.1, dE=0.001, sens=1e-6,
@@ -209,6 +210,7 @@ class LSV(Technique):
 
 class IT(Technique):
     """
+    Class for running IT Technique
     """
 
     def __init__(self, Estep=0.2, dt=0.001, ttot=2, sens=1e-6,
@@ -230,7 +232,7 @@ class IT(Technique):
 
 class CA(Technique):
     """
-    Class for CA experiment to determine conductivity
+    Class for running CA experiment to determine conductivity
     """
 
     def __init__(self, Eini=-0.025, Ev1=0.025, Ev2=-0.025,  dE=1e-6, nSweeps=200, pw=1e-4, sens=1e-4,
@@ -252,6 +254,7 @@ class CA(Technique):
 
 class OCP(Technique):
     """
+    Class for running OCP Technique
     """
 
     def __init__(self, ttot=2, dt=0.01, fileName='OCP', header='OCP', **kwargs):
@@ -262,7 +265,7 @@ class OCP(Technique):
             Technique.__init__(self, text=self.tech.text, fileName=fileName)
             self.technique = 'OCP'
         elif model_pstat == 'emstatpico':
-            self.tech = emstatpico.OCP(ttot, dt, folder_save, fileName, header=header
+            self.tech = emstatpico.OCP(ttot, dt, folder_save, fileName, header=header,
                                        **kwargs)
             Technique.__init__(self, text=self.tech.text, fileName=fileName)
             self.technique = 'OCP'
@@ -272,6 +275,7 @@ class OCP(Technique):
 
 class NPV(Technique):
     """
+    Class for running NPV Technique
     """
 
     def __init__(self, Eini=0.5, Efin=-0.5, dE=0.01, tsample=0.1, twidth=0.05,
@@ -288,6 +292,7 @@ class NPV(Technique):
 
 class EIS(Technique):
     """
+    Class for running ESI Technique for determining solution resistance
     """
 
     def __init__(self, Eini=0, low_freq=1, high_freq=1000, amplitude=0.01, sens=1e-6,
@@ -300,5 +305,3 @@ class EIS(Technique):
             self.technique = 'EIS'
         else:
             print('Potentiostat model ' + model_pstat + ' does not have EIS.')
-
-
