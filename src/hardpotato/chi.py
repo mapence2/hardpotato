@@ -172,7 +172,7 @@ class ChiCV(ChiBase):
         self.validate(Eini, Ev1, Ev2, Efin, sr, dE, nSweeps, sens)
         eh, el, pn = self.correct_volts(Ev1, Ev2)
 
-        self.body = f'tech=cv\nei={Eini}\neh={eh}\nel={el}\npn={pn}\ncl={nSweeps+1}' \  
+        self.body = f'tech=cv\nei={Eini}\neh={eh}\nel={el}\npn={pn}\ncl={nSweeps+1}' \
                     f'\nefon\nef={Efin}\nsi={dE}\nqt={self.qt}\nv={sr}\nsens={sens}'
 
     def validate(self, Eini, Ev1, Ev2, Efin, sr, dE, nSweeps, sens):
@@ -224,7 +224,7 @@ class ChiIT(ChiBase):
 class ChiCA(ChiBase):
 
     def __init__(self, Eini, Ev1, Ev2, dE, nSweeps, pw, sens, **kwargs):
-        super(ChiBase, self).__init__(**kwargs)
+        super().__init__(**kwargs)
 
         self.validate(Eini, Ev1, Ev2)
         eh, el, pn = self.correct_volts(Ev1, Ev2)

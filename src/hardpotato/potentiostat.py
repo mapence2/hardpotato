@@ -174,12 +174,11 @@ class CV(Technique):
         self.header = header
         self.technique = 'CV'
         if "chi" in model_pstat:
-            self.tech = ChiCV(Eini, Ev1, Ev2, Efin, sr, dE, nSweeps, sens,
-                              folder_save, fileName, header=header, model=model_pstat, **kwargs)
+            self.tech = ChiCV(Eini, Ev1, Ev2, Efin, sr, dE, nSweeps, sens, header=header, model=model_pstat, **kwargs)
             Technique.__init__(self, text=self.tech.text, fileName=fileName)
         elif model_pstat == 'emstatpico':
-            self.tech = emstatpico.CV(Eini, Ev1, Ev2, Efin, sr, dE, nSweeps, sens,
-                                      folder_save, fileName, header=header, path_lib='',
+            self.tech = emstatpico.CV(Eini=Eini, Ev1=Ev1, Ev2=Ev2, Efin=Efin, sr=sr, dE=dE, nSweeps=nSweeps, sens=sens,
+                                      folder_save=folder_save, fileName=fileName, header=header, path_lib='',
                                       **kwargs)
             Technique.__init__(self, text=self.tech.text, fileName=fileName)
         else:
@@ -195,13 +194,12 @@ class LSV(Technique):
                  fileName='LSV', header='LSV', **kwargs):
         self.header = header
         if "chi" in model_pstat:
-            self.tech = ChiLSV(Eini, Efin, sr, dE, sens, folder_save, fileName,
-                               header, model=model_pstat, **kwargs)
+            self.tech = ChiLSV(Eini, Efin, sr, dE, sens, model=model_pstat, **kwargs)
             Technique.__init__(self, text=self.tech.text, fileName=fileName)
             self.technique = 'LSV'
         elif model_pstat == 'emstatpico':
-            self.tech = emstatpico.LSV(Eini, Efin, sr, dE, sens, folder_save, fileName,
-                                       header, **kwargs)
+            self.tech = emstatpico.LSV(Eini=Eini, Efin=Efin, sr=sr, dE=dE, sens=sens, folder_save=folder_save,
+                                       fileName=fileName, header=header, **kwargs)
             Technique.__init__(self, text=self.tech.text, fileName=fileName)
             self.technique = 'LSV'
         else:
@@ -217,13 +215,12 @@ class IT(Technique):
                  fileName='IT', header='IT', **kwargs):
         self.header = header
         if "chi" in model_pstat:
-            self.tech = ChiIT(Estep, dt, ttot, sens, folder_save, fileName,
-                              header, model=model_pstat, **kwargs)
+            self.tech = ChiIT(Estep, dt, ttot, sens, model=model_pstat, **kwargs)
             Technique.__init__(self, text=self.tech.text, fileName=fileName)
             self.technique = 'IT'
         elif model_pstat == 'emstatpico':
-            self.tech = emstatpico.IT(Estep, dt, ttot, sens, folder_save, fileName,
-                                      header, **kwargs)
+            self.tech = emstatpico.IT(Estep=Estep, dt=dt, ttot=ttot, sens=sens, folder_save=folder_save,
+                                      fileName=fileName, header=header, **kwargs)
             Technique.__init__(self, text=self.tech.text, fileName=fileName)
             self.technique = 'IT'
         else:
@@ -239,8 +236,8 @@ class CA(Technique):
                  fileName='CA', header='CA', **kwargs):
         self.header = header
         if "chi" in model_pstat:
-            self.tech = ChiCA(Eini, Ev1, Ev2,  dE, nSweeps, pw, sens, 
-                              folder_save, fileName, header=header, model=model_pstat, **kwargs)
+            self.tech = ChiCA(Eini=Eini, Ev1=Ev1, Ev2=Ev2, dE=dE, nSweeps=nSweeps, pw=pw, sens=sens,
+                              header=header, model=model_pstat, **kwargs)
             Technique.__init__(self, text=self.tech.text, fileName=fileName)
             self.technique = 'CA'
         # elif model_pstat == 'emstatpico':
@@ -260,12 +257,12 @@ class OCP(Technique):
     def __init__(self, ttot=2, dt=0.01, fileName='OCP', header='OCP', **kwargs):
         self.header = header
         if "chi" in model_pstat:
-            self.tech = ChiOCP(ttot, dt, folder_save, fileName, header=header,
+            self.tech = ChiOCP(ttot, dt, header=header,
                                model=model_pstat, **kwargs)
             Technique.__init__(self, text=self.tech.text, fileName=fileName)
             self.technique = 'OCP'
         elif model_pstat == 'emstatpico':
-            self.tech = emstatpico.OCP(ttot, dt, folder_save, fileName, header=header,
+            self.tech = emstatpico.OCP(ttot=ttot, dt=dt, folder_save=folder_save, fileName=fileName, header=header,
                                        **kwargs)
             Technique.__init__(self, text=self.tech.text, fileName=fileName)
             self.technique = 'OCP'
@@ -282,8 +279,8 @@ class NPV(Technique):
                  tperiod=10, sens=1e-6,
                  fileName='NPV', header='NPV performed with CHI760', **kwargs):
         if "chi" in model_pstat:
-            self.tech = ChiNPV(Eini, Efin, dE, tsample, twidth, tperiod, sens,
-                               folder_save, fileName, header=header, model=model_pstat, **kwargs)
+            self.tech = ChiNPV(Eini=Eini, Efin=Efin, dE=dE, tsample=tsample, twidth=twidth, tperiod=tperiod, sens=sens,
+                               header=header, model=model_pstat, **kwargs)
             Technique.__init__(self, text=self.tech.text, fileName=fileName)
             self.technique = 'NPV'
         else:
@@ -299,8 +296,8 @@ class EIS(Technique):
                  fileName='EIS', header='EIS', **kwargs):
         self.header = header
         if "chi" in model_pstat:
-            self.tech = ChiEIS(Eini, low_freq, high_freq, amplitude, sens,
-                               folder_save, fileName, header=header, model=model_pstat, **kwargs)
+            self.tech = ChiEIS(Eini=Eini, low_freq=low_freq, high_freq=high_freq, amplitude=amplitude, sens=sens,
+                               header=header, model=model_pstat, **kwargs)
             Technique.__init__(self, text=self.tech.text, fileName=fileName)
             self.technique = 'EIS'
         else:
