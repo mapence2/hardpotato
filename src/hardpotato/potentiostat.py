@@ -341,6 +341,19 @@ class NPV(Technique):
             print('Potentiostat model ' + model_pstat + ' does not have NPV.')
 
 
+class BE(Technique):
+    '''
+    '''
+    def __init__(self, Eapply=0.5, iratio=1, tsample=1, bepe=0, bept=0, sens=1e-3,
+                 fileName='BE', header='BE performed with CHI760', **kwargs):
+        if model_pstat == 'chi760e':
+            self.tech = chi760e.BE(Eapply, iratio, tsample, bepe, bept, sens,
+                                    path_lib, folder_save, fileName, header,  **kwargs)
+            Technique.__init__(self, text=self.tech.text, fileName=fileName)
+            self.technique = 'BE'
+        else:
+            print('Potentiostat model ' + model_pstat + ' does not have BE.')
+
 
 class EIS(Technique):
     '''

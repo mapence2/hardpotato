@@ -192,7 +192,7 @@ class NPV():
 
         self.validate(Eini, Efin, dE, tsample, twidth, tperiod, sens)
 
-        self.head = 'C\x02\0\0\nfolder: ' + folder + '\n' + fileOverride + \
+        self.head = 'C\x02\0\0\nfolder: ' + folder + '\nfileoverride\n' + \
                     'header: ' + header + '\n\n'
         self.body = 'tech=NPV\nei=' + str(Eini) + '\nef=' + str(Efin) + \
                     '\nincre=' + str(dE) + '\npw=' + str(tsample) + \
@@ -207,6 +207,34 @@ class NPV():
         info = Info()
         info.limits(Eini, info.E_min, info.E_max, 'Eini', 'V')
         info.limits(Efin, info.E_min, info.E_max, 'Efin', 'V')
+        #info.limits(tsample, info.tsample)
+        #info.limits(dE, info.dE_min, info.dE_max, 'dE', 'V')
+        #info.limits(sens, info.sens_min, info.sens_max, 'sens', 'A/V')
+
+class BE():
+    def __init__(self, Eapply, iratio, tsample, bepe, bept, sens,
+                 path_lib, folder, fileName, header, **kwargs):
+        self.fileName = fileName
+        self.folder = folder
+        self.text = ''
+
+        print('BE technique still in development! Use with caution.')
+
+        self.validate(Eapply, iratio, tsample, bepe, bept, sens)
+
+        self.head = 'C\x02\0\0\nfolder: ' + folder + '\nfileoverride\n' + \
+                    'header: ' + header + '\n\n'
+        self.body = 'tech=BE\nei=' + str(Eapply) + '\niratio=' + str(iratio) + \
+                    '\nsi=' + str(tsample) + '\nbepe=' + str(bepe) + \
+                    '\nsw=' + str(bept) + '\nsens=' + str(sens)
+        self.body = self.body + \
+                    '\nrun\nsave:' + fileName + '\ntsave:' + fileName 
+        self.foot = '\n forcequit: yesiamsure\n'
+        self.text = self.head + self.body + self.foot
+
+    def validate(self, Eapply, iratio, tsample, bepe, bept, sens):
+        info = Info()
+        info.limits(Eapply, info.E_min, info.E_max, 'Eini', 'V')
         #info.limits(tsample, info.tsample)
         #info.limits(dE, info.dE_min, info.dE_max, 'dE', 'V')
         #info.limits(sens, info.sens_min, info.sens_max, 'sens', 'A/V')
