@@ -167,7 +167,7 @@ class ChiBase:
 
 class ChiCV(ChiBase):
     def __init__(self, Eini, Ev1, Ev2, Efin, sr, dE, nSweeps, sens, **kwargs):
-        super(ChiBase, self).__init__(**kwargs)
+        super().__init__(**kwargs)
 
         self.validate(Eini, Ev1, Ev2, Efin, sr, dE, nSweeps, sens)
         eh, el, pn = self.correct_volts(Ev1, Ev2)
@@ -185,7 +185,7 @@ class ChiCV(ChiBase):
 
 class ChiLSV(ChiBase):
     def __init__(self, Eini, Efin, sr, dE, sens, **kwargs):
-        super(ChiBase, self).__init__(**kwargs)
+        super().__init__(**kwargs)
 
         self.validate(Eini, Efin, sr, dE, sens)
         self.body = f'tech=lsv\nei={Eini}\nef={Efin}\nv={sr}\nsi={dE}\nqt={self.qt}\nsens={sens}'
@@ -198,7 +198,7 @@ class ChiLSV(ChiBase):
 
 class ChiNPV(ChiBase):
     def __init__(self, Eini, Efin, dE, tsample, twidth, tperiod, sens, **kwargs):
-        super(ChiBase, self).__init__(**kwargs)
+        super().__init__(**kwargs)
         print('NPV technique still in development. Use with caution.')
 
         self.validate(Eini, Efin, dE, tsample, twidth, tperiod, sens)
@@ -212,7 +212,7 @@ class ChiNPV(ChiBase):
 
 class ChiIT(ChiBase):
     def __init__(self, Estep, dt, ttot, sens, **kwargs):
-        super(ChiBase, self).__init__(**kwargs)
+        super().__init__(**kwargs)
 
         self.validate(Estep, dt, ttot, sens)
         self.body = f'tech=i-t\nei={Estep}\nst={ttot}\nsi={dt}\nqt={self.qt}\nsens={sens}'
@@ -244,7 +244,7 @@ class ChiOCP(ChiBase):
     """
 
     def __init__(self, ttot, dt, **kwargs):
-        super(ChiBase, self).__init__(**kwargs)
+        super().__init__(**kwargs)
 
         self.body = f'tech=ocpt\nst={ttot}\neh=10\nel=-10\nsi={dt}\nqt={self.qt}'
 
@@ -256,7 +256,7 @@ class ChiEIS(ChiBase):
     """
 
     def __init__(self, Eini, low_freq, high_freq, amplitude, sens, **kwargs):
-        super(ChiBase, self).__init__(**kwargs)
+        super().__init__(**kwargs)
 
         print('EIS technique is still in development. Use with caution.')
         self.body = f'tech=imp\nei={Eini}\nfl={low_freq}\nfh={high_freq}\namp={amplitude}\nsens={sens}\nqt={self.qt}'
