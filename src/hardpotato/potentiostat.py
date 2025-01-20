@@ -13,7 +13,7 @@ import hardpotato.pico_mscript as mscript
 import hardpotato.pico_serial as serial
 
 # Potentiostat models available: 
-models_available = ['chi1205b', 'chi1242b', 'chi601e', 'chi620e', 'chi760e', 'emstatpico']
+models_available = ['chi1205b', 'chi1242b', 'chi601e', 'chi620e', 'chi604d', 'chi760e', 'emstatpico']
 
 # Global variables
 folder_save = '.'
@@ -103,6 +103,7 @@ class Technique:
             # Run command:
             command = path_lib
             param = ' /runmacro:\"' + folder_save + '/' + self.fileName + '.mcr\"'
+            print("Running Command: ", command + param)
             os.system(command + param)
             self.message(start=False)
             self.plot()

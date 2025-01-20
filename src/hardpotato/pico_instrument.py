@@ -256,7 +256,7 @@ class Instrument():
         This method should recover from such situation and restore communication.
         """
         LOG.info('Aborting possible active scripts and syncing communication.')
-        # Send new line character to flush possible command in command buffer.
+        # Send snaps_20240828 line character to flush possible command in command buffer.
         self.write('\n')
         # Send abort command.
         self.write('Z\n')

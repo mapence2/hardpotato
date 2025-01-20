@@ -11,6 +11,7 @@ class ChiInfo:
     def __init__(self, model):
         if model == "chi601e":
             self.name = "CH Instruments 601E (chi601e)"
+            self.file_tag = "c\x02\0\0"
             self.tech = ['CV', 'IT', 'CA', 'LSV', 'OCP', 'NPV', 'EIS']
             self.options = [
                 'Quiet time in s (qt)',
@@ -23,8 +24,26 @@ class ChiInfo:
             self.E_max = 10
             self.sr_min = 0.000001
             self.sr_max = 10000
+        elif model == "chi604d":
+            self.name = "CH Instruments 604D (chi604d)"
+            self.file_tag = "P\x01\x00\x00"
+            self.tech = ['CV', 'IT', 'CA', 'LSV', 'OCP']
+            self.options = [
+                'Quiet time in s (qt)',
+                'Resistance in ohms (resistance)'
+            ]
+            self.bipot = False
+            self.resistance_opt = True
+
+            self.E_min = -10
+            self.E_max = 10
+            self.sr_min = 0.000001
+            self.sr_max = 10000
+            self.freq_min = 0.00001
+            self.freq_max = 1000000
         elif model == "chi620e":
             self.name = "CH Instruments 620E (chi620e)"
+            self.file_tag = "c\x02\0\0"
             self.tech = ['CV', 'IT', 'CA', 'LSV', 'OCP', 'NPV']
             self.options = [
                 'Quiet time in s (qt)',
@@ -41,6 +60,7 @@ class ChiInfo:
             self.freq_max = 1000000
         elif model == "chi650e":
             self.name = "CH Instruments 620E (chi620e)"
+            self.file_tag = "c\x02\0\0"
             self.tech = ['CV', 'IT', 'CA', 'LSV', 'OCP', 'NPV', 'EIS']
             self.options = [
                 'Quiet time in s (qt)',
@@ -57,6 +77,7 @@ class ChiInfo:
             self.freq_max = 1000000
         elif model == "chi760e":
             self.name = "CH Instruments 760E (chi760e)"
+            self.file_tag = "c\x02\0\0"
             self.tech = self.tech = ['CV', 'IT', 'CA', 'LSV', 'OCP', 'NPV', 'EIS']
             self.options = [
                 'Quiet time in s (qt)',
@@ -73,6 +94,7 @@ class ChiInfo:
             self.freq_max = 1000000
         elif model == "chi1205b":
             self.name = "CH Instruments 1205B (chi1205b)"
+            self.file_tag = "c\x02\0\0"
             self.tech = ['CV', 'IT', 'CA', 'LSV', 'OCP']
             self.options = ['Quiet time in s (qt)']
             self.bipot = False
@@ -84,6 +106,7 @@ class ChiInfo:
             self.sr_max = 10
         elif model == "chi1242b":
             self.name = "H Instruments 1242B (chi1242b)"
+            self.file_tag = "c\x02\0\0"
             self.tech = ['CV', 'IT', 'CA', 'LSV', 'OCP']
             self.options = ['Quiet time in s (qt)']
             self.bipot = True
@@ -120,7 +143,7 @@ class ChiBase:
         self.fileName = kwargs.get('fileName', "")
         self.folder = kwargs.get('folder', "")
         self.header = kwargs.get('header', "")
-        self.head = f'c\x02\0\0\nfolder: {self.folder}\nfileoverride\nheader: {self.header}\n\n'
+        self.head = f'{self.info.file_tag}\nfolder: {self.folder}\nfileoverride\nheader: {self.header}\n\n'
         self.body = ''
         self.foot = '\n forcequit: yesiamsure\n'
 
@@ -229,7 +252,7 @@ class ChiCA(ChiBase):
         self.validate(Eini, Ev1, Ev2)
         eh, el, pn = self.correct_volts(Ev1, Ev2)
         self.body = f'tech=ca\nei={Eini}\neh={eh}\nel={el}\npn={pn}\n' \
-                    f'cl={nSweeps+1}\npw={pw}\nsi={dE}\nqt={self.qt}\nsens={sens}'
+                    f'cl={nSweeps}\npw={pw}\nsi={dE}\nqt={self.qt}\nsens={sens}'
 
     def validate(self, Eini, Ev1, Ev2):
         self.info.limits(Eini, self.info.E_min, self.info.E_max, 'Eini', 'V')
