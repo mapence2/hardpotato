@@ -2,6 +2,7 @@ import os
 import numpy as np
 import matplotlib.pyplot as plt
 import softpotato as sp
+import subprocess
 
 from hardpotato.chi import *
 import hardpotato.load_data as load_data
@@ -101,10 +102,9 @@ class Technique:
             # Write macro:
             self.writeToFile()
             # Run command:
-            command = path_lib
-            param = ' /runmacro:\"' + folder_save + '/' + self.fileName + '.mcr\"'
-            print("Running Command: ", command + param)
-            os.system(command + param)
+            command = f'\"{path_lib}\"' + ' /runmacro:\"' + folder_save + '/' + self.fileName + '.mcr\"'
+            subprocess.run(command)
+            print("Running Command: ", command)
             self.message(start=False)
             self.plot()
         elif model_pstat == 'emstatpico':
@@ -279,7 +279,8 @@ class NPV(Technique):
 
     def __init__(self, Eini=0.5, Efin=-0.5, dE=0.01, tsample=0.1, twidth=0.05,
                  tperiod=10, sens=1e-6,
-                 fileName='NPV', header='NPV performed with CHI760', **kwargs):
+                 fileName='NPV',header='NPV', **kwargs):
+        
         if "chi" in model_pstat:
             self.tech = ChiNPV(Eini=Eini, Efin=Efin, dE=dE, tsample=tsample, twidth=twidth, tperiod=tperiod, sens=sens,
                                header=header, fileName=fileName, model=model_pstat, folder=folder_save, **kwargs)
@@ -288,6 +289,20 @@ class NPV(Technique):
         else:
             print('Potentiostat model ' + model_pstat + ' does not have NPV.')
 
+class SWV(Technique):
+    """
+    Class for running NPV Technique
+    """
+
+    def __init__(self, Eini=0.5, Efin=-0.5, dE=0.004, amp=0.025, freq=15, sens=1e-6,
+                 fileName='SWV', header='SWV', **kwargs):
+        if "chi" in model_pstat:
+            self.tech = ChiSWV(Eini=Eini, Efin=Efin, dE=dE, amp=amp, freq=freq, sens=sens,
+                               header=header, fileName=fileName, model=model_pstat, folder=folder_save, **kwargs)
+            Technique.__init__(self, text=self.tech.text, fileName=fileName)
+            self.technique = 'SWV'
+        else:
+            print('Potentiostat model ' + model_pstat + ' does not have SWV.')
 
 class EIS(Technique):
     """

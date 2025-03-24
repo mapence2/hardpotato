@@ -59,9 +59,26 @@ class ChiInfo:
             self.freq_min = 0.00001
             self.freq_max = 1000000
         elif model == "chi650e":
-            self.name = "CH Instruments 620E (chi620e)"
+            self.name = "CH Instruments 650E (chi650e)"
             self.file_tag = "c\x02\0\0"
             self.tech = ['CV', 'IT', 'CA', 'LSV', 'OCP', 'NPV', 'EIS']
+            self.options = [
+                'Quiet time in s (qt)',
+                'Resistance in ohms (resistance)'
+            ]
+            self.bipot = True
+            self.resistance_opt = True
+
+            self.E_min = -10
+            self.E_max = 10
+            self.sr_min = 0.000001
+            self.sr_max = 10000
+            self.freq_min = 0.00001
+            self.freq_max = 1000000
+        elif model == "chi660e":
+            self.name = "CH Instruments 660E (chi660e)"
+            self.file_tag = "c\x02\0\0"
+            self.tech = ['CV', 'IT', 'CA', 'LSV', 'OCP', 'NPV', 'SWV','EIS']
             self.options = [
                 'Quiet time in s (qt)',
                 'Resistance in ohms (resistance)'
@@ -232,6 +249,18 @@ class ChiNPV(ChiBase):
         self.info.limits(Eini, self.info.E_min, self.info.E_max, 'Eini', 'V')
         self.info.limits(Efin, self.info.E_min, self.info.E_max, 'Efin', 'V')
 
+class ChiSWV(ChiBase):
+    def __init__(self, Eini, Efin, dE, amp, freq, sens, **kwargs):
+        super().__init__(**kwargs)
+        print('SWV technique still in development. Use with caution.')
+
+        self.validate(Eini, Efin, dE, amp, freq, sens)
+        self.body = f'tech=SWV\nei={Eini}\nef={Efin}\nincre={dE}\namp={amp}\nfreq={freq}' \
+                    f'\nqt={self.qt}\nsens={sens}'
+
+    def validate(self, Eini, Efin, dE, tsample, twidth, tperiod, sens):
+        self.info.limits(Eini, self.info.E_min, self.info.E_max, 'Eini', 'V')
+        self.info.limits(Efin, self.info.E_min, self.info.E_max, 'Efin', 'V')
 
 class ChiIT(ChiBase):
     def __init__(self, Estep, dt, ttot, sens, **kwargs):
