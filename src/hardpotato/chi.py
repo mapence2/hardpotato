@@ -258,7 +258,7 @@ class ChiSWV(ChiBase):
         self.body = f'tech=SWV\nei={Eini}\nef={Efin}\nincre={dE}\namp={amp}\nfreq={freq}' \
                     f'\nqt={self.qt}\nsens={sens}'
 
-    def validate(self, Eini, Efin, dE, tsample, twidth, tperiod, sens):
+    def validate(self, Eini, Efin, dE, amp, freq, sens):
         self.info.limits(Eini, self.info.E_min, self.info.E_max, 'Eini', 'V')
         self.info.limits(Efin, self.info.E_min, self.info.E_max, 'Efin', 'V')
 
